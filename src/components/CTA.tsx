@@ -50,7 +50,7 @@ const CTA = () => {
             }`}
             style={{ animationDelay: '300ms' }}
           >
-            Join thousands of creators who use TikTool to analyze their content, discover trends, and grow their audience.
+            Join hundreds of users who are already using TikTool to spoof their growth.
           </p>
           
           <div 
