@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 const Index = () => {
   useEffect(() => {
     // Update document title
-    document.title = "TikTool - AI-Powered TikTok Content Analysis";
+    document.title = "TikTool";
     
     // Scroll to top on component mount
     window.scrollTo(0, 0);
