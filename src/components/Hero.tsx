@@ -38,14 +38,16 @@ const Hero = () => {
         </h1>
         
         <p className="text-xl md:text-2xl text-gray-300 text-center max-w-3xl mb-12 animate-fade-in opacity-0 animation-delay-200">
-          The all-in-one AI tool that helps creators analyze, optimize, and elevate their TikTok presence.
+          The all-in-one TikTok bot, made for creators. No installation & easy use.
         </p>
         
         <div className="animate-fade-in opacity-0 animation-delay-300">
-          <Button size="lg" className="bg-tiktool-gradient hover:brightness-110 transition-all font-medium text-lg px-10 py-7 rounded-full shadow-glow group">
-            Get Started Free
+          <a href="https://discord.gg/tiktool" target="_blank" rel="noopener noreferrer">
+            <Button size="lg" className="bg-tiktool-gradient hover:brightness-110 transition-all font-medium text-lg px-10 py-7 rounded-full shadow-glow group">
+              TRY IT OUT FOR FREE
             <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
+            </Button>
+          </a>
         </div>
 
         <div className="mt-16 glass-card p-6 rounded-xl max-w-5xl w-full transform hover:scale-[1.02] transition-all duration-500 shadow-glow-subtle">
