@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center">
               <img 
-                src="https://private-user-images.githubusercontent.com/208094155/444645400-c6bc3055-87e9-4e08-a682-01c3605a6570.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDc0MjE3MzMsIm5iZiI6MTc0NzQyMTQzMywicGF0aCI6Ii8yMDgwOTQxNTUvNDQ0NjQ1NDAwLWM2YmMzMDU1LTg3ZTktNGUwOC1hNjgyLTAxYzM2MDVhNjU3MC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNTE2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDUxNlQxODUwMzNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zODA5OGYyY2VmY2FkM2MzN2U0NTc5YWNiNmFjMTA5MDg5ZjQ2Y2NhZThlZTM5NDBhM2I5YmEzOWIyMjM0MDdlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.A0sU3ENHnrmafIPjJd7rLopEywSDeqBOvCZrCutj25M" 
+                src="https://github.com/user-attachments/assets/c6bc3055-87e9-4e08-a682-01c3605a6570"
                 alt="TikTool Logo" 
                 className="h-8 w-auto"
               />
