@@ -4,8 +4,8 @@ import { Circle, Eye, Bot, Search, Share, Layout } from 'lucide-react';
 const featureItems = [
   {
     icon: <Eye className="h-8 w-8 text-tiktool-cyan" />,
-    title: "Spoof Growth",
-    description: "Spoof your growth like never before, allowing you to get Media rank in DonutSMP, etc."
+    title: "Free and Premium",
+    description: "We offer a free tier for our users. Allowing you to see how it works & make a decision whether to upgrade or not."
   },
   {
     icon: <Bot className="h-8 w-8 text-tiktool-magenta" />,
