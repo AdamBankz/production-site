@@ -60,7 +60,7 @@ const Hero = () => {
               loop
               playsInline
             >
-              <source src="https://github.com/user-attachments/assets/dd54cb2f-8499-421d-bafd-0cf6562600c9"/>
+              <source src="https://github.com/user-attachments/assets/4dd29113-7606-4621-8e1b-27761eeb0d30"/>
                 Your browser does not support the video tag.
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70 group-hover:opacity-30 transition-opacity duration-300"></div>
