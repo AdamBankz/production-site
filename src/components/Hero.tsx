@@ -27,7 +27,7 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-16">
         <div className="mb-8">
           <img 
-            src="https://github.com/user-attachments/assets/c6bc3055-87e9-4e08-a682-01c3605a6570"
+            src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741"
             alt="TikTool Logo" 
             className="h-36 md:h-48 w-auto drop-shadow-[0_0_15px_rgba(0,229,229,0.5)] animate-float"
           />
