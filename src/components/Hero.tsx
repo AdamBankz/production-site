@@ -58,7 +58,7 @@ const Hero = () => {
               loop
               playsInline
             >
-              <source src="https://www.youtube.com/a5c013c9-39f6-4f7e-bd37-51ee645ca98a" type="video/mp4" />
+              <source src="https://github-production-user-asset-6210df.s3.amazonaws.com/208094155/444666425-c95adaaf-b59e-4616-b7be-9a3b86c31902.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250516%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250516T184705Z&X-Amz-Expires=300&X-Amz-Signature=df30d5c9708daa70c41cbfeeaba4b0cd5e29ca6b74da3bd65bb7cfe3156794be&X-Amz-SignedHeaders=host" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70 group-hover:opacity-30 transition-opacity duration-300"></div>
