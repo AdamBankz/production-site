@@ -57,12 +57,12 @@ const CTA = () => {
             className={isVisible ? 'animate-slide-up opacity-0' : 'opacity-0'} 
             style={{ animationDelay: '500ms' }}
           >
-            <Button 
-              size="lg" 
-              className="bg-tiktool-gradient hover:brightness-110 transition-all font-medium text-lg px-10 py-7 rounded-full shadow-glow group magnetic-button"
-            >
-              Try it for free!
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+            <a href="https://discord.gg/tiktool" target="_blank" rel="noopener noreferrer">
+              <Button 
+                size="lg" 
+                className="bg-tiktool-gradient hover:brightness-110 transition-all font-medium text-lg px-10 py-7 rounded-full shadow-glow group magnetic-button">
+                Try it for free!
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
         </div>
