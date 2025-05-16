@@ -65,7 +65,7 @@ const Hero = () => {
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70 group-hover:opacity-30 transition-opacity duration-300"></div>
             <div className="absolute bottom-4 left-4 text-gradient glow text-xl font-semibold">
-              TikTool in Action
+              Preview
             </div>
           </div>
         </div>
