@@ -14,7 +14,7 @@ const Footer = () => {
             <span className="ml-3 text-xl font-bold text-gradient">TikTool</span>
           </div>
           <p className="text-gray-400 mt-4 md:mt-0 max-w-md">
-            The ultimate toolkit for TikTok creators looking to spoof their presence.
+            The ultimate toolkit for TikTok creators looking to spoof their presence!
           </p>
         </div>
 
