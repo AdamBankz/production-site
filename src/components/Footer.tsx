@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-start gap-8">
           <div className="flex items-center">
             <img 
-              src="https://github.com/user-attachments/assets/c6bc3055-87e9-4e08-a682-01c3605a6570"
+              src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741"
               alt="TikTool Logo" 
               className="h-8 w-auto"
             />
