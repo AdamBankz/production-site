@@ -10,12 +10,12 @@ const featureItems = [
   {
     icon: <Bot className="h-8 w-8 text-tiktool-magenta" />,
     title: "Military-grade Robotics",
-    description: "We use a 100% undetectable algorithm. Meaning TikTool will never get patched fully, or lead to any bans."
+    description: "Not only are we undetectable on TikTok, but our premium tier bypasses Whop's machine learning algorithm."
   },
   {
     icon: <Search className="h-8 w-8 text-tiktool-cyan" />,
     title: "Search Exposure",
-    description: "Stay on top of TikTok searches, increasing your exposure."
+    description: "Stay on top of TikTok searches, increasing your exposure and natural growth."
   },
   {
     icon: <Circle className="h-8 w-8 text-tiktool-magenta" />,
