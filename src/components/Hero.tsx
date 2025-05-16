@@ -58,7 +58,7 @@ const Hero = () => {
               loop
               playsInline
             >
-              <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
+              <source src="https://www.youtube.com/a5c013c9-39f6-4f7e-bd37-51ee645ca98a" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70 group-hover:opacity-30 transition-opacity duration-300"></div>
