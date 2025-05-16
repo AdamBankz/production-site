@@ -41,7 +41,7 @@ const CTA = () => {
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-reveal">
             <span className="inline-block" style={{ animationDelay: '0ms' }}>Ready to </span>
             <span className="text-gradient glow inline-block" style={{ animationDelay: '100ms' }}>Transform</span>
-            <span className="inline-block" style={{ animationDelay: '200ms' }}> Your TikTok Game?</span>
+            <span className="inline-block" style={{ animationDelay: '200ms' }}> Your TikTok Account?</span>
           </h2>
           
           <p 
