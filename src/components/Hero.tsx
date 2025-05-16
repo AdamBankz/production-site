@@ -44,7 +44,7 @@ const Hero = () => {
         <div className="animate-fade-in opacity-0 animation-delay-300">
           <a href="https://discord.gg/tiktool" target="_blank" rel="noopener noreferrer">
             <Button size="lg" className="bg-tiktool-gradient hover:brightness-110 transition-all font-medium text-lg px-10 py-7 rounded-full shadow-glow group">
-              Try our Discord bot for free
+              Try our free Discord bot!
             <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </a>
