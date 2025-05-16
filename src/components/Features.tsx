@@ -4,33 +4,33 @@ import { Circle, Eye, Bot, Search, Share, Layout } from 'lucide-react';
 const featureItems = [
   {
     icon: <Eye className="h-8 w-8 text-tiktool-cyan" />,
-    title: "Content Analysis",
-    description: "Deep analysis of your content performance with AI-powered insights to understand what works and why."
+    title: "Spoof Growth",
+    description: "Spoof your growth like never before, allowing you to get Media rank in DonutSMP, etc."
   },
   {
     icon: <Bot className="h-8 w-8 text-tiktool-magenta" />,
-    title: "AI Recommendations",
-    description: "Get personalized recommendations to improve your content strategy based on trending patterns."
+    title: "Military-grade Robotics",
+    description: "We use a 100% undetectable algorithm. Meaning TikTool will never get patched fully, or lead to any bans."
   },
   {
     icon: <Search className="h-8 w-8 text-tiktool-cyan" />,
-    title: "Trend Detection",
-    description: "Stay ahead of the curve with real-time trend analysis and notifications for relevant opportunities."
+    title: "Search Exposure",
+    description: "Stay on top of TikTok searches, increasing your exposure."
   },
   {
     icon: <Circle className="h-8 w-8 text-tiktool-magenta" />,
-    title: "Competitor Insights",
-    description: "Track and analyze competitor strategies to benchmark your performance and find new opportunities."
+    title: "24/7 Support",
+    description: "Every one of our users are priority. If you need support, create a ticket and we will be there ASAP."
   },
   {
     icon: <Share className="h-8 w-8 text-tiktool-cyan" />,
-    title: "Performance Metrics",
-    description: "Comprehensive dashboard with actionable metrics to track growth and engagement over time."
+    title: "No downloads",
+    description: "We host the bot ourselves. Meaning you do not have to download anything to use it and that it stays online 24/7."
   },
   {
     icon: <Layout className="h-8 w-8 text-tiktool-magenta" />,
-    title: "Content Calendar",
-    description: "Plan your content strategy with an AI-optimized posting schedule to maximize reach and engagement."
+    title: "Low Downtime",
+    description: "TikTook has an incredible development team, meaning updates are pushed hours after being patched."
   }
 ];
 
@@ -46,7 +46,7 @@ const Features = () => {
             Powerful <span className="text-gradient">Features</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Everything you need to analyze, optimize and grow your TikTok presence
+            Everything you need to create your TikTok presence
           </p>
         </div>
 
