@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -8,26 +7,23 @@ import Footer from '@/components/Footer';
 
 const Index = () => {
   useEffect(() => {
+    // Update document title
     document.title = "TikTool";
+    
+    // Scroll to top on component mount
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <>
-      <Head>
-        <title>TikTool</title>
-        <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741" />
-      </Head>
-      <div className="min-h-screen bg-background text-foreground">
-        <Navbar />
-        <main>
-          <Hero />
-          <Features />
-          <CTA />
-        </main>
-        <Footer />
-      </div>
-    </>
+    <div className="min-h-screen bg-background text-foreground">
+      <Navbar />
+      <main>
+        <Hero />
+        <Features />
+        <CTA />
+      </main>
+      <Footer />
+    </div>
   );
 };
 
