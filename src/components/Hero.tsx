@@ -34,11 +34,11 @@ const Hero = () => {
         </div>
 
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-center mb-8 animate-fade-in">
-          Supercharge Your <span className="text-gradient glow">TikTok</span> <span className="block mt-2">Content</span>
+          Supercharge Your <span className="text-gradient glow">Videos</span> <span className="block mt-2"></span>
         </h1>
         
         <p className="text-xl md:text-2xl text-gray-300 text-center max-w-3xl mb-12 animate-fade-in opacity-0 animation-delay-200">
-          The all-in-one TikTok bot, made for creators. No installation & easy use.
+          ✓ Views, Likes, Followers & more. No installation. Easy Use.
         </p>
         
         <div className="animate-fade-in opacity-0 animation-delay-300">
