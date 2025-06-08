@@ -20,8 +20,8 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, "index.html"),
-        downloader: path.resolve(__dirname, "downloader/index.html"),
+        main: "index.html",
+        downloader: "downloader/index.html",
       },
     },
   },
