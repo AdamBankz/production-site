@@ -49,10 +49,10 @@ const Downloader = () => {
     }
 
     setIsDownloading(true);
+    let filenameToCleanup: string | null = null;
 
     try {
-      console.log('Step 1: Requesting filename from backend for URL:', videoUrl);
-      const initialResponse = await fetch(`${BACKEND_URL}/download`, {
+      const processResponse = await fetch(`${BACKEND_URL}/download`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,58 +60,47 @@ const Downloader = () => {
         body: JSON.stringify({ url: videoUrl }),
       });
 
-      if (!initialResponse.ok) {
-        const errorData = await initialResponse.json().catch(() => ({ detail: 'Failed to get filename, server error.' }));
-        throw new Error(errorData.detail || 'Failed to get filename.');
+      if (!processResponse.ok) {
+        const errorData = await processResponse.json().catch(() => ({ detail: 'Unknown error during processing.' }));
+        throw new Error(errorData.detail || 'Video processing failed at backend.');
       }
 
-      const responseData = await initialResponse.json();
-      const filenameFromServer = responseData.filename;
+      const data = await processResponse.json();
+      filenameToCleanup = data.filename;
 
-      if (!filenameFromServer) {
-        throw new Error('Filename not received from server.');
-      }
-      console.log('Step 1 complete. Received filename:', filenameFromServer);
-
-      console.log(`Step 2: Fetching video file: ${filenameFromServer}`);
-      const videoResponse = await fetch(`${BACKEND_URL}/serve-video/${filenameFromServer}`, {
-        method: 'GET',
-      });
-
-      if (!videoResponse.ok) {
-        const errorData = await videoResponse.json().catch(() => ({ detail: 'Failed to download video file, server error.' }));
-        throw new Error(errorData.detail || 'Failed to download video file.');
+      if (!filenameToCleanup) {
+        throw new Error("Failed to get unique filename from backend.");
       }
 
-      const contentDisposition = videoResponse.headers.get('content-disposition');
-      const finalFilename = contentDisposition ? contentDisposition.split('filename=')[1]?.replace(new RegExp('"', 'g'), '') : filenameFromServer;
+      const fileResponse = await fetch(`${BACKEND_URL}/serve-video/${filenameToCleanup}`);
 
-      const blob = await videoResponse.blob();
-      await downloadFile(blob, finalFilename);
-      console.log('Step 2 complete. Video download initiated for:', finalFilename);
+      if (!fileResponse.ok) {
+        const errorData = await fileResponse.json().catch(() => ({ detail: 'Unknown error during file fetch.' }));
+        throw new Error(errorData.detail || 'Failed to fetch video file from backend.');
+      }
+
+      const videoBlob = await fileResponse.blob();
+      await downloadFile(videoBlob, filenameToCleanup);
 
       toast({
         title: "Download Complete",
         description: "Your video has been downloaded successfully!",
       });
 
-      if (finalFilename && finalFilename !== 'tiktok_video.mp4') {
+      if (filenameToCleanup && filenameToCleanup !== 'tiktok_video.mp4') {
         try {
-          console.log(`Step 3: Sending cleanup request for: ${finalFilename}`);
-          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${finalFilename}`, { method: 'DELETE' });
-          if (cleanupResponse.ok) {
-            console.log(`Cleanup successful for ${finalFilename}`);
-          } else {
-            const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed with non-JSON response' }));
-            console.warn(`Cleanup failed for ${finalFilename}: ${cleanupErrorData.detail || cleanupResponse.statusText}`);
+          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${filenameToCleanup}`, {
+            method: 'DELETE',
+          });
+          if (!cleanupResponse.ok) {
+            const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed.' }));
+            console.warn(`Cleanup failed: ${cleanupErrorData.detail}`);
           }
         } catch (cleanupError) {
-          console.error(`Error during cleanup call for ${finalFilename}:`, cleanupError);
+          console.error(`Error during cleanup call:`, cleanupError);
         }
-      } else {
-        console.warn('Skipping cleanup: Filename is default or missing for file:', finalFilename);
       }
-      
+
       setVideoUrl('');
       setIsValidUrl(false);
     } catch (error) {
@@ -128,19 +117,17 @@ const Downloader = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Background effects */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 left-1/2 w-[600px] h-[600px] bg-tiktool-cyan/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/2 w-[600px] h-[600px] bg-tiktool-magenta/20 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 animate-pulse"></div>
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Main content */}
         <div className="text-center mb-12 mt-20">
           <div className="mb-8">
-            <img 
+            <img
               src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741"
-              alt="TikTool Logo" 
+              alt="TikTool Logo"
               className="h-24 md:h-32 w-auto mx-auto drop-shadow-[0_0_15px_rgba(0,229,229,0.5)] animate-float"
             />
           </div>
@@ -152,7 +139,6 @@ const Downloader = () => {
           </p>
         </div>
 
-        {/* Download form */}
         <div className="glass-card p-8 md:p-12 rounded-2xl border border-white/10 shadow-glow-subtle max-w-2xl mx-auto animate-scale-in opacity-0 animation-delay-300">
           <div className="space-y-6">
             <div className="space-y-2">
@@ -212,7 +198,6 @@ const Downloader = () => {
             </Button>
           </div>
 
-          {/* Info section */}
           <div className="mt-8 pt-8 border-t border-white/10">
             <h3 className="text-lg font-semibold mb-4 text-center">How it works</h3>
             <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-300">
@@ -238,7 +223,6 @@ const Downloader = () => {
           </div>
         </div>
 
-        {/* Features */}
         <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up opacity-0 animation-delay-500">
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">🎬</div>
