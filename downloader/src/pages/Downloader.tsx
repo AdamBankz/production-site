@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button'; // Assuming this should refer to main src components
+import { Input } from '@/components/ui/input';   // Assuming this should refer to main src components
+import { Label } from '@/components/ui/label';   // Assuming this should refer to main src components
 import { Download, AlertCircle, CheckCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast'; // Assuming this should refer to main src hooks
 
 const Downloader = () => {
   const [videoUrl, setVideoUrl] = useState('');
@@ -12,10 +11,8 @@ const Downloader = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
-  // Your Python backend URL - update this with your deployed backend URL
-  const BACKEND_URL = 'https://d2ec-86-26-205-172.ngrok-free.app'; // Replace with your actual backend URL
+  const BACKEND_URL = 'https://cf9f-45-80-158-244.ngrok-free.app';
 
-  // Enhanced regex to validate TikTok URLs including video/photo URLs
   const tiktokUrlRegex = /^https?:\/\/(vm\.tiktok\.com\/[A-Za-z0-9]+|(?:www\.)?tiktok\.com\/@[^\/]+\/(video|photo)\/\d+)/;
 
   const validateUrl = (url: string) => {
@@ -88,11 +85,10 @@ const Downloader = () => {
         throw new Error(errorData.detail || 'Failed to download video file.');
       }
 
-      // Prefer filename from Content-Disposition of the actual file download if available
       const contentDisposition = videoResponse.headers.get('content-disposition');
       const finalFilename = contentDisposition
         ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
-        : filenameFromServer; // Fallback to filename from step 1
+        : filenameFromServer;
 
       const blob = await videoResponse.blob();
       await downloadFile(blob, finalFilename);
@@ -104,7 +100,7 @@ const Downloader = () => {
       });
 
       // Step 3: Call cleanup API
-      if (finalFilename && finalFilename !== 'tiktok_video.mp4') { // Ensure filename is valid
+      if (finalFilename && finalFilename !== 'tiktok_video.mp4') {
         try {
           console.log(`Step 3: Sending cleanup request for: ${finalFilename}`);
           const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${finalFilename}`, {
@@ -123,7 +119,6 @@ const Downloader = () => {
         console.warn('Skipping cleanup: Filename is default or missing for file:', finalFilename);
       }
       
-      // Reset form
       setVideoUrl('');
       setIsValidUrl(false);
 
@@ -152,7 +147,7 @@ const Downloader = () => {
         <div className="text-center mb-12 mt-20">
           <div className="mb-8">
             <img 
-              src="/lovable-uploads/c4eb337c-9e8a-4162-a61e-004a6e96a7e7.png" 
+              src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741"
               alt="TikTool Logo" 
               className="h-24 md:h-32 w-auto mx-auto drop-shadow-[0_0_15px_rgba(0,229,229,0.5)] animate-float"
             />
@@ -256,7 +251,7 @@ const Downloader = () => {
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">🎬</div>
             <h3 className="font-semibold mb-2">High Quality</h3>
-            <p className="text-sm text-gray-300">Download videos in their original quality</p>
+            <p className="text-sm text-gray-300">Download videos in the best possible quality</p>
           </div>
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">⚡</div>
@@ -266,12 +261,12 @@ const Downloader = () => {
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">🔒</div>
             <h3 className="font-semibold mb-2">Secure</h3>
-            <p className="text-sm text-gray-300">Your privacy and data are protected</p>
+            <p className="text-sm text-gray-300">Bypass TikTok's meta-data checks</p>
           </div>
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">💯</div>
-            <h3 className="font-semibold mb-2">Free</h3>
-            <p className="text-sm text-gray-300">No hidden fees or subscriptions</p>
+            <h3 className="font-semibold mb-2">No ads</h3>
+            <p className="text-sm text-gray-300">No hidden fees or ads</p>
           </div>
         </div>
       </div>
