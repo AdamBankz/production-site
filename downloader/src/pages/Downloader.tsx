@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +29,9 @@ const Downloader = () => {
     validateUrl(url);
   };
 
+  // This helper function is no longer strictly needed for the download initiation
+  // as window.location.href will handle the download directly from the /serve-video endpoint.
+  // However, if you have other uses for downloading blobs, you can keep it.
   const downloadFile = async (blob: Blob, filename: string) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -52,11 +54,13 @@ const Downloader = () => {
     }
 
     setIsDownloading(true);
-    
+    let filenameToCleanup: string | null = null; // Declare variable to hold the filename
+
     try {
-      console.log('Sending download request to backend:', videoUrl);
-      
-      const response = await fetch(`${BACKEND_URL}/download`, {
+      // Step 1: Send request to backend to process the video and get the filename in JSON
+      console.log('Sending process request to backend:', videoUrl);
+
+      const processResponse = await fetch(`${BACKEND_URL}/download`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,52 +68,56 @@ const Downloader = () => {
         body: JSON.stringify({ url: videoUrl }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Download failed');
+      if (!processResponse.ok) {
+        const errorData = await processResponse.json().catch(() => ({ detail: 'Unknown error during processing.' }));
+        throw new Error(errorData.detail || 'Video processing failed at backend.');
       }
 
-      // Get the filename from the response headers
-      const contentDisposition = response.headers.get('content-disposition');
-      const filename = contentDisposition 
-        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') 
-        : 'tiktok_video.mp4';
+      // Parse the JSON response to get the filename
+      const data = await processResponse.json();
+      filenameToCleanup = data.filename; // Get the unique filename from the JSON response
 
-      // Convert response to blob and download
-      const blob = await response.blob();
-      await downloadFile(blob, filename);
+      if (!filenameToCleanup) {
+        console.error("Backend did not return a filename for download.");
+        throw new Error("Failed to get unique filename from backend.");
+      }
 
-      // Call cleanup API
-      if (filename && filename !== 'tiktok_video.mp4') { // Ensure filename is valid
+      console.log(`Received filename from backend: ${filenameToCleanup}. Initiating file download...`);
+
+      // Step 2: Trigger the actual file download using the received filename
+      // This will cause the browser to prompt the user to save the file.
+      window.location.href = `${BACKEND_URL}/serve-video/${filenameToCleanup}`;
+
+      // --- Cleanup Logic ---
+      // Add a short delay to allow the browser to initiate the download.
+      // `window.location.href` does not block execution, so cleanup might run immediately.
+      // A real-world application might need a more robust way to confirm download completion.
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
+
+      if (filenameToCleanup && filenameToCleanup !== 'tiktok_video.mp4') { // Ensure filename is valid and not default
         try {
-          console.log(`Sending cleanup request for: ${filename}`);
-          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${filename}`, {
+          console.log(`Sending cleanup request for: ${filenameToCleanup}`);
+          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${filenameToCleanup}`, {
             method: 'DELETE',
           });
           if (cleanupResponse.ok) {
-            console.log(`Cleanup successful for ${filename}`);
-            // Optionally, show a toast for successful cleanup if desired
-            // toast({ title: "Cleanup Successful", description: `${filename} removed from server.` });
+            console.log(`Cleanup successful for ${filenameToCleanup}`);
           } else {
             const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed with non-JSON response' }));
-            console.warn(`Cleanup failed for ${filename}: ${cleanupErrorData.detail || cleanupResponse.statusText}`);
-            // Optionally, show a toast for failed cleanup if desired
-            // toast({ title: "Cleanup Failed", description: `Could not remove ${filename} from server: ${cleanupErrorData.detail || cleanupResponse.statusText}`, variant: "warning" });
+            console.warn(`Cleanup failed for ${filenameToCleanup}: ${cleanupErrorData.detail || cleanupErrorData.statusText}`);
           }
         } catch (cleanupError) {
-          console.error(`Error during cleanup call for ${filename}:`, cleanupError);
-          // Optionally, show a toast for error during cleanup
-          // toast({ title: "Cleanup Error", description: `An error occurred while trying to remove ${filename} from server.`, variant: "destructive" });
+          console.error(`Error during cleanup call for ${filenameToCleanup}:`, cleanupError);
         }
       } else {
         console.warn('Skipping cleanup: Filename is default or missing.');
       }
-      
+
       toast({
         title: "Download Complete",
         description: "Your video has been downloaded successfully!",
       });
-      
+
       // Reset form
       setVideoUrl('');
       setIsValidUrl(false);
