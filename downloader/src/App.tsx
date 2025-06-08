@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@downloader/components/ui/toaster";
 import { Toaster as Sonner } from "@downloader/components/ui/sonner";
 import { TooltipProvider } from "@downloader/components/ui/tooltip";
+import Navbar from "@downloader/components/Navbar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Downloader from "./pages/Downloader";
@@ -13,6 +14,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <Navbar />
       <Toaster />
       <Sonner />
       <Analytics />

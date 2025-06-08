@@ -25,7 +25,7 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-full">
         <Button asChild variant="outline" className="transition-transform duration-200 ease-in-out hover:scale-105">
-          <a href="/">TikTok Viewbotter</a>
+          <a href="/downloader">TikTok Video Downloader</a>
         </Button>
       </div>
     </header>
