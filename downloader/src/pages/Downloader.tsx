@@ -78,6 +78,32 @@ const Downloader = () => {
       // Convert response to blob and download
       const blob = await response.blob();
       await downloadFile(blob, filename);
+
+      // Call cleanup API
+      if (filename && filename !== 'tiktok_video.mp4') { // Ensure filename is valid
+        try {
+          console.log(`Sending cleanup request for: ${filename}`);
+          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${filename}`, {
+            method: 'DELETE',
+          });
+          if (cleanupResponse.ok) {
+            console.log(`Cleanup successful for ${filename}`);
+            // Optionally, show a toast for successful cleanup if desired
+            // toast({ title: "Cleanup Successful", description: `${filename} removed from server.` });
+          } else {
+            const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed with non-JSON response' }));
+            console.warn(`Cleanup failed for ${filename}: ${cleanupErrorData.detail || cleanupResponse.statusText}`);
+            // Optionally, show a toast for failed cleanup if desired
+            // toast({ title: "Cleanup Failed", description: `Could not remove ${filename} from server: ${cleanupErrorData.detail || cleanupResponse.statusText}`, variant: "warning" });
+          }
+        } catch (cleanupError) {
+          console.error(`Error during cleanup call for ${filename}:`, cleanupError);
+          // Optionally, show a toast for error during cleanup
+          // toast({ title: "Cleanup Error", description: `An error occurred while trying to remove ${filename} from server.`, variant: "destructive" });
+        }
+      } else {
+        console.warn('Skipping cleanup: Filename is default or missing.');
+      }
       
       toast({
         title: "Download Complete",
