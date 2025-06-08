@@ -1,5 +1,5 @@
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@downloader/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 

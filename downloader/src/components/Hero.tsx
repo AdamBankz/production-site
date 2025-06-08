@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@downloader/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
