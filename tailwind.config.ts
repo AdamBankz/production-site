@@ -8,6 +8,7 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+		"./downloader/src/**/*.{ts,tsx}",
 	],
 	prefix: "",
 	theme: {
