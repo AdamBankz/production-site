@@ -11,10 +11,8 @@ const Downloader = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
-  // Your Python backend URL - update this with your deployed backend URL
-  const BACKEND_URL = 'https://cf9f-45-80-158-244.ngrok-free.app'; // Replace with your actual backend URL
+  const BACKEND_URL = 'https://cf9f-45-80-158-244.ngrok-free.app';
 
-  // Enhanced regex to validate TikTok URLs including video/photo URLs
   const tiktokUrlRegex = /^https?:\/\/(vm\.tiktok\.com\/[A-Za-z0-9]+|(?:www\.)?tiktok\.com\/@[^\/]+\/(video|photo)\/\d+)/;
 
   const validateUrl = (url: string) => {
@@ -29,16 +27,15 @@ const Downloader = () => {
     validateUrl(url);
   };
 
-  // RE-ENABLED AND MODIFIED: This function now takes a blob and filename to trigger download without navigation
   const downloadFile = async (blob: Blob, filename: string) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);
-    link.click(); // Programmatically click the link to trigger download
-    document.body.removeChild(link); // Clean up the DOM
-    window.URL.revokeObjectURL(url); // Release the object URL
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
   const handleDownload = async () => {
@@ -52,12 +49,9 @@ const Downloader = () => {
     }
 
     setIsDownloading(true);
-    let filenameToCleanup: string | null = null; // Declare variable to hold the filename
+    let filenameToCleanup: string | null = null;
 
     try {
-      // Step 1: Send request to backend to process the video and get the filename in JSON
-      console.log('Sending process request to backend:', videoUrl);
-
       const processResponse = await fetch(`${BACKEND_URL}/download`, {
         method: 'POST',
         headers: {
@@ -71,18 +65,13 @@ const Downloader = () => {
         throw new Error(errorData.detail || 'Video processing failed at backend.');
       }
 
-      // Parse the JSON response to get the filename
       const data = await processResponse.json();
-      filenameToCleanup = data.filename; // Get the unique filename from the JSON response
+      filenameToCleanup = data.filename;
 
       if (!filenameToCleanup) {
-        console.error("Backend did not return a filename for download.");
         throw new Error("Failed to get unique filename from backend.");
       }
 
-      console.log(`Received filename from backend: ${filenameToCleanup}. Fetching file...`);
-
-      // Step 2: Fetch the actual video file using the filename from the new /serve-video endpoint
       const fileResponse = await fetch(`${BACKEND_URL}/serve-video/${filenameToCleanup}`);
 
       if (!fileResponse.ok) {
@@ -90,48 +79,35 @@ const Downloader = () => {
         throw new Error(errorData.detail || 'Failed to fetch video file from backend.');
       }
 
-      // Convert the response to a Blob
       const videoBlob = await fileResponse.blob();
-
-      // Trigger the download using the helper function, which keeps the user on the same page
       await downloadFile(videoBlob, filenameToCleanup);
-
-      console.log('Video download initiated successfully on client-side.');
-
-      // --- Cleanup Logic ---
-      // Now that the page context is preserved, cleanup should reliably execute
-      if (filenameToCleanup && filenameToCleanup !== 'tiktok_video.mp4') { // Ensure filename is valid and not default
-        try {
-          console.log(`Sending cleanup request for: ${filenameToCleanup}`);
-          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${filenameToCleanup}`, {
-            method: 'DELETE',
-          });
-          if (cleanupResponse.ok) {
-            console.log(`Cleanup successful for ${filenameToCleanup}`);
-          } else {
-            const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed with non-JSON response' }));
-            console.warn(`Cleanup failed for ${filenameToCleanup}: ${cleanupErrorData.detail || cleanupResponse.statusText}`);
-          }
-        } catch (cleanupError) {
-          console.error(`Error during cleanup call for ${filenameToCleanup}:`, cleanupError);
-        }
-      } else {
-        console.warn('Skipping cleanup: Filename is default or missing.');
-      }
 
       toast({
         title: "Download Complete",
         description: "Your video has been downloaded successfully!",
       });
 
-      // Reset form
+      if (filenameToCleanup && filenameToCleanup !== 'tiktok_video.mp4') {
+        try {
+          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${filenameToCleanup}`, {
+            method: 'DELETE',
+          });
+          if (!cleanupResponse.ok) {
+            const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed.' }));
+            console.warn(`Cleanup failed: ${cleanupErrorData.detail}`);
+          }
+        } catch (cleanupError) {
+          console.error(`Error during cleanup call:`, cleanupError);
+        }
+      }
+
       setVideoUrl('');
       setIsValidUrl(false);
     } catch (error) {
-      console.error('Download error:', error);
+      console.error('Download process error:', error);
       toast({
-        title: "Download Failed",
-        description: error instanceof Error ? error.message : "There was an error downloading the video. Please try again.",
+        title: "Operation Failed",
+        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -141,14 +117,12 @@ const Downloader = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Background effects */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 left-1/2 w-[600px] h-[600px] bg-tiktool-cyan/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/2 w-[600px] h-[600px] bg-tiktool-magenta/20 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 animate-pulse"></div>
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Main content */}
         <div className="text-center mb-12 mt-20">
           <div className="mb-8">
             <img
@@ -165,7 +139,6 @@ const Downloader = () => {
           </p>
         </div>
 
-        {/* Download form */}
         <div className="glass-card p-8 md:p-12 rounded-2xl border border-white/10 shadow-glow-subtle max-w-2xl mx-auto animate-scale-in opacity-0 animation-delay-300">
           <div className="space-y-6">
             <div className="space-y-2">
@@ -225,7 +198,6 @@ const Downloader = () => {
             </Button>
           </div>
 
-          {/* Info section */}
           <div className="mt-8 pt-8 border-t border-white/10">
             <h3 className="text-lg font-semibold mb-4 text-center">How it works</h3>
             <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-300">
@@ -251,7 +223,6 @@ const Downloader = () => {
           </div>
         </div>
 
-        {/* Features */}
         <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up opacity-0 animation-delay-500">
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">🎬</div>
