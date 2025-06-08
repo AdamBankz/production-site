@@ -54,9 +54,9 @@ const Downloader = () => {
     setIsDownloading(true);
     
     try {
-      console.log('Sending download request to backend:', videoUrl);
-      
-      const response = await fetch(`${BACKEND_URL}/download`, {
+      console.log('Step 1: Requesting filename from backend for URL:', videoUrl);
+      // Step 1: Get filename from backend
+      const initialResponse = await fetch(`${BACKEND_URL}/download`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,60 +64,74 @@ const Downloader = () => {
         body: JSON.stringify({ url: videoUrl }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Download failed');
+      if (!initialResponse.ok) {
+        const errorData = await initialResponse.json().catch(() => ({ detail: 'Failed to get filename, server error.' }));
+        throw new Error(errorData.detail || 'Failed to get filename.');
       }
 
-      // Get the filename from the response headers
-      const contentDisposition = response.headers.get('content-disposition');
-      const filename = contentDisposition 
-        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') 
-        : 'tiktok_video.mp4';
+      const responseData = await initialResponse.json();
+      const filenameFromServer = responseData.filename;
 
-      // Convert response to blob and download
-      const blob = await response.blob();
-      await downloadFile(blob, filename);
-
-      // Call cleanup API
-      if (filename && filename !== 'tiktok_video.mp4') { // Ensure filename is valid
-        try {
-          console.log(`Sending cleanup request for: ${filename}`);
-          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${filename}`, {
-            method: 'DELETE',
-          });
-          if (cleanupResponse.ok) {
-            console.log(`Cleanup successful for ${filename}`);
-            // Optionally, show a toast for successful cleanup if desired
-            // toast({ title: "Cleanup Successful", description: `${filename} removed from server.` });
-          } else {
-            const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed with non-JSON response' }));
-            console.warn(`Cleanup failed for ${filename}: ${cleanupErrorData.detail || cleanupResponse.statusText}`);
-            // Optionally, show a toast for failed cleanup if desired
-            // toast({ title: "Cleanup Failed", description: `Could not remove ${filename} from server: ${cleanupErrorData.detail || cleanupResponse.statusText}`, variant: "warning" });
-          }
-        } catch (cleanupError) {
-          console.error(`Error during cleanup call for ${filename}:`, cleanupError);
-          // Optionally, show a toast for error during cleanup
-          // toast({ title: "Cleanup Error", description: `An error occurred while trying to remove ${filename} from server.`, variant: "destructive" });
-        }
-      } else {
-        console.warn('Skipping cleanup: Filename is default or missing.');
+      if (!filenameFromServer) {
+        throw new Error('Filename not received from server.');
       }
-      
+      console.log('Step 1 complete. Received filename:', filenameFromServer);
+
+      // Step 2: Fetch the actual video file
+      console.log(`Step 2: Fetching video file: ${filenameFromServer}`);
+      const videoResponse = await fetch(`${BACKEND_URL}/serve-video/${filenameFromServer}`, {
+        method: 'GET',
+      });
+
+      if (!videoResponse.ok) {
+        const errorData = await videoResponse.json().catch(() => ({ detail: 'Failed to download video file, server error.' }));
+        throw new Error(errorData.detail || 'Failed to download video file.');
+      }
+
+      // Prefer filename from Content-Disposition of the actual file download if available
+      const contentDisposition = videoResponse.headers.get('content-disposition');
+      const finalFilename = contentDisposition
+        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
+        : filenameFromServer; // Fallback to filename from step 1
+
+      const blob = await videoResponse.blob();
+      await downloadFile(blob, finalFilename);
+      console.log('Step 2 complete. Video download initiated for:', finalFilename);
+
       toast({
         title: "Download Complete",
         description: "Your video has been downloaded successfully!",
       });
+
+      // Step 3: Call cleanup API
+      if (finalFilename && finalFilename !== 'tiktok_video.mp4') { // Ensure filename is valid
+        try {
+          console.log(`Step 3: Sending cleanup request for: ${finalFilename}`);
+          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${finalFilename}`, {
+            method: 'DELETE',
+          });
+          if (cleanupResponse.ok) {
+            console.log(`Cleanup successful for ${finalFilename}`);
+          } else {
+            const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed with non-JSON response' }));
+            console.warn(`Cleanup failed for ${finalFilename}: ${cleanupErrorData.detail || cleanupResponse.statusText}`);
+          }
+        } catch (cleanupError) {
+          console.error(`Error during cleanup call for ${finalFilename}:`, cleanupError);
+        }
+      } else {
+        console.warn('Skipping cleanup: Filename is default or missing for file:', finalFilename);
+      }
       
       // Reset form
       setVideoUrl('');
       setIsValidUrl(false);
+
     } catch (error) {
-      console.error('Download error:', error);
+      console.error('Download process error:', error);
       toast({
-        title: "Download Failed",
-        description: error instanceof Error ? error.message : "There was an error downloading the video. Please try again.",
+        title: "Operation Failed",
+        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
