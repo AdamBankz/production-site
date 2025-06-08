@@ -1,4 +1,5 @@
 
+import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@downloader/components/ui/toaster";
 import { Toaster as Sonner } from "@downloader/components/ui/sonner";
 import { TooltipProvider } from "@downloader/components/ui/tooltip";
@@ -14,6 +15,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <Analytics />
       <BrowserRouter basename="/downloader">
         <Routes>
           <Route path="/" element={<Downloader />} />
