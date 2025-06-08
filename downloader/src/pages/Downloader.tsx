@@ -12,7 +12,7 @@ const Downloader = () => {
   const { toast } = useToast();
 
   // Your Python backend URL - update this with your deployed backend URL
-  const BACKEND_URL = 'https://f0cd-86-26-205-172.ngrok-free.app'; // Replace with your actual backend URL
+  const BACKEND_URL = 'https://1115-45-80-158-244.ngrok-free.app'; // Replace with your actual backend URL
 
   // Enhanced regex to validate TikTok URLs including video/photo URLs
   const tiktokUrlRegex = /^https?:\/\/(vm\.tiktok\.com\/[A-Za-z0-9]+|(?:www\.)?tiktok\.com\/@[^\/]+\/(video|photo)\/\d+)/;
