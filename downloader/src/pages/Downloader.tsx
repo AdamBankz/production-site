@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button'; // Assuming this should refer to main src components
-import { Input } from '@/components/ui/input';   // Assuming this should refer to main src components
-import { Label } from '@/components/ui/label';   // Assuming this should refer to main src components
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Download, AlertCircle, CheckCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast'; // Assuming this should refer to main src hooks
+import { useToast } from '@/hooks/use-toast';
 
 const Downloader = () => {
   const [videoUrl, setVideoUrl] = useState('');
@@ -49,10 +49,9 @@ const Downloader = () => {
     }
 
     setIsDownloading(true);
-    
+
     try {
       console.log('Step 1: Requesting filename from backend for URL:', videoUrl);
-      // Step 1: Get filename from backend
       const initialResponse = await fetch(`${BACKEND_URL}/download`, {
         method: 'POST',
         headers: {
@@ -74,7 +73,6 @@ const Downloader = () => {
       }
       console.log('Step 1 complete. Received filename:', filenameFromServer);
 
-      // Step 2: Fetch the actual video file
       console.log(`Step 2: Fetching video file: ${filenameFromServer}`);
       const videoResponse = await fetch(`${BACKEND_URL}/serve-video/${filenameFromServer}`, {
         method: 'GET',
@@ -86,9 +84,7 @@ const Downloader = () => {
       }
 
       const contentDisposition = videoResponse.headers.get('content-disposition');
-      const finalFilename = contentDisposition
-        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
-        : filenameFromServer;
+      const finalFilename = contentDisposition ? contentDisposition.split('filename=')[1]?.replace(new RegExp('"', 'g'), '') : filenameFromServer;
 
       const blob = await videoResponse.blob();
       await downloadFile(blob, finalFilename);
@@ -99,13 +95,10 @@ const Downloader = () => {
         description: "Your video has been downloaded successfully!",
       });
 
-      // Step 3: Call cleanup API
       if (finalFilename && finalFilename !== 'tiktok_video.mp4') {
         try {
           console.log(`Step 3: Sending cleanup request for: ${finalFilename}`);
-          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${finalFilename}`, {
-            method: 'DELETE',
-          });
+          const cleanupResponse = await fetch(`${BACKEND_URL}/cleanup/${finalFilename}`, { method: 'DELETE' });
           if (cleanupResponse.ok) {
             console.log(`Cleanup successful for ${finalFilename}`);
           } else {
@@ -121,7 +114,6 @@ const Downloader = () => {
       
       setVideoUrl('');
       setIsValidUrl(false);
-
     } catch (error) {
       console.error('Download process error:', error);
       toast({
@@ -156,7 +148,7 @@ const Downloader = () => {
             TikTok Video <span className="text-gradient glow">Downloader</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto animate-fade-in opacity-0 animation-delay-200">
-            Download any TikTok video in high quality. Just paste the link and we'll handle the rest.
+            Just paste the link and we'll handle the rest.
           </p>
         </div>
 
@@ -175,10 +167,10 @@ const Downloader = () => {
                   value={videoUrl}
                   onChange={handleUrlChange}
                   className={`h-14 text-lg pr-12 ${
-                    videoUrl && !isValidUrl 
-                      ? 'border-red-500 focus-visible:ring-red-500' 
-                      : videoUrl && isValidUrl 
-                      ? 'border-green-500 focus-visible:ring-green-500' 
+                    videoUrl && !isValidUrl
+                      ? 'border-red-500 focus-visible:ring-red-500'
+                      : videoUrl && isValidUrl
+                      ? 'border-green-500 focus-visible:ring-green-500'
                       : ''
                   }`}
                   disabled={isDownloading}
