@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -22,8 +23,11 @@ const Navbar = () => {
         scrolled ? 'backdrop-blur-xl bg-black/60 shadow-lg py-2' : 'py-4'
       }`}
     >
-      {/* We're completely removing the navigation content to make the header clean */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-full">
+        <Button asChild variant="outline" className="transition-transform duration-200 ease-in-out hover:scale-105">
+          <a href="/downloader">TikTok Video Downloader</a>
+        </Button>
+      </div>
     </header>
   );
 };
