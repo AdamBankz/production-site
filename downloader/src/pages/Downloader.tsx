@@ -29,18 +29,16 @@ const Downloader = () => {
     validateUrl(url);
   };
 
-  // This helper function is no longer strictly needed for the download initiation
-  // as window.location.href will handle the download directly from the /serve-video endpoint.
-  // However, if you have other uses for downloading blobs, you can keep it.
+  // RE-ENABLED AND MODIFIED: This function now takes a blob and filename to trigger download without navigation
   const downloadFile = async (blob: Blob, filename: string) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    link.click(); // Programmatically click the link to trigger download
+    document.body.removeChild(link); // Clean up the DOM
+    window.URL.revokeObjectURL(url); // Release the object URL
   };
 
   const handleDownload = async () => {
@@ -82,18 +80,26 @@ const Downloader = () => {
         throw new Error("Failed to get unique filename from backend.");
       }
 
-      console.log(`Received filename from backend: ${filenameToCleanup}. Initiating file download...`);
+      console.log(`Received filename from backend: ${filenameToCleanup}. Fetching file...`);
 
-      // Step 2: Trigger the actual file download using the received filename
-      // This will cause the browser to prompt the user to save the file.
-      window.location.href = `${BACKEND_URL}/serve-video/${filenameToCleanup}`;
+      // Step 2: Fetch the actual video file using the filename from the new /serve-video endpoint
+      const fileResponse = await fetch(`${BACKEND_URL}/serve-video/${filenameToCleanup}`);
+
+      if (!fileResponse.ok) {
+        const errorData = await fileResponse.json().catch(() => ({ detail: 'Unknown error during file fetch.' }));
+        throw new Error(errorData.detail || 'Failed to fetch video file from backend.');
+      }
+
+      // Convert the response to a Blob
+      const videoBlob = await fileResponse.blob();
+
+      // Trigger the download using the helper function, which keeps the user on the same page
+      await downloadFile(videoBlob, filenameToCleanup);
+
+      console.log('Video download initiated successfully on client-side.');
 
       // --- Cleanup Logic ---
-      // Add a short delay to allow the browser to initiate the download.
-      // `window.location.href` does not block execution, so cleanup might run immediately.
-      // A real-world application might need a more robust way to confirm download completion.
-      await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
-
+      // Now that the page context is preserved, cleanup should reliably execute
       if (filenameToCleanup && filenameToCleanup !== 'tiktok_video.mp4') { // Ensure filename is valid and not default
         try {
           console.log(`Sending cleanup request for: ${filenameToCleanup}`);
@@ -104,7 +110,7 @@ const Downloader = () => {
             console.log(`Cleanup successful for ${filenameToCleanup}`);
           } else {
             const cleanupErrorData = await cleanupResponse.json().catch(() => ({ detail: 'Cleanup failed with non-JSON response' }));
-            console.warn(`Cleanup failed for ${filenameToCleanup}: ${cleanupErrorData.detail || cleanupErrorData.statusText}`);
+            console.warn(`Cleanup failed for ${filenameToCleanup}: ${cleanupErrorData.detail || cleanupResponse.statusText}`);
           }
         } catch (cleanupError) {
           console.error(`Error during cleanup call for ${filenameToCleanup}:`, cleanupError);
@@ -145,9 +151,9 @@ const Downloader = () => {
         {/* Main content */}
         <div className="text-center mb-12 mt-20">
           <div className="mb-8">
-            <img 
-              src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741" 
-              alt="TikTool Logo" 
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741"
+              alt="TikTool Logo"
               className="h-24 md:h-32 w-auto mx-auto drop-shadow-[0_0_15px_rgba(0,229,229,0.5)] animate-float"
             />
           </div>
@@ -174,10 +180,10 @@ const Downloader = () => {
                   value={videoUrl}
                   onChange={handleUrlChange}
                   className={`h-14 text-lg pr-12 ${
-                    videoUrl && !isValidUrl 
-                      ? 'border-red-500 focus-visible:ring-red-500' 
-                      : videoUrl && isValidUrl 
-                      ? 'border-green-500 focus-visible:ring-green-500' 
+                    videoUrl && !isValidUrl
+                      ? 'border-red-500 focus-visible:ring-red-500'
+                      : videoUrl && isValidUrl
+                      ? 'border-green-500 focus-visible:ring-green-500'
                       : ''
                   }`}
                   disabled={isDownloading}
