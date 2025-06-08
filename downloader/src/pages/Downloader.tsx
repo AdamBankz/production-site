@@ -112,7 +112,7 @@ const Downloader = () => {
         <div className="text-center mb-12 mt-20">
           <div className="mb-8">
             <img 
-              src="/lovable-uploads/c4eb337c-9e8a-4162-a61e-004a6e96a7e7.png" 
+              src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Logoforme.png?20250516192741" 
               alt="TikTool Logo" 
               className="h-24 md:h-32 w-auto mx-auto drop-shadow-[0_0_15px_rgba(0,229,229,0.5)] animate-float"
             />
@@ -121,7 +121,7 @@ const Downloader = () => {
             TikTok Video <span className="text-gradient glow">Downloader</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto animate-fade-in opacity-0 animation-delay-200">
-            Download any TikTok video in high quality. Just paste the link and we'll handle the rest.
+            Just paste the link and we'll handle the rest.
           </p>
         </div>
 
@@ -216,7 +216,7 @@ const Downloader = () => {
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">🎬</div>
             <h3 className="font-semibold mb-2">High Quality</h3>
-            <p className="text-sm text-gray-300">Download videos in their original quality</p>
+            <p className="text-sm text-gray-300">Download videos in the best possible quality</p>
           </div>
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">⚡</div>
@@ -226,12 +226,12 @@ const Downloader = () => {
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">🔒</div>
             <h3 className="font-semibold mb-2">Secure</h3>
-            <p className="text-sm text-gray-300">Your privacy and data are protected</p>
+            <p className="text-sm text-gray-300">Bypass TikTok's meta-data checks</p>
           </div>
           <div className="glass-card p-6 rounded-xl text-center">
             <div className="text-2xl mb-2">💯</div>
-            <h3 className="font-semibold mb-2">Free</h3>
-            <p className="text-sm text-gray-300">No hidden fees or subscriptions</p>
+            <h3 className="font-semibold mb-2">No ads</h3>
+            <p className="text-sm text-gray-300">No hidden fees or ads</p>
           </div>
         </div>
       </div>
